@@ -9,26 +9,25 @@ import xml.etree.ElementTree as xml
 
 REPLACEMENT_REGEXES_STR = [
     # stuff we don't want to replace
-    (r'(\w+) Root Program', r'\1_unreplace Root Program'),
-    (r'(\w+) Web( S|s)tore', r'\1_unreplace Web Store'),
-    (r'(\w+) Remote Desktop', r'\1_unreplace Remote Desktop'),
-
+    (r"(\w+) Root Program", r"\1_unreplace Root Program"),
+    (r"(\w+) Web( S|s)tore", r"\1_unreplace Web Store"),
+    (r"(\w+) Remote Desktop", r"\1_unreplace Remote Desktop"),
     # main replacement(s)
-    (r'(\b)chrome://', r'\1helium://'),
-    (r'(?:Google )?Chrom(e|ium)(?!\w)', r'Helium'),
-
+    (r"(\b)chrome://", r"\1helium://"),
+    (r"(?:Google )?Chrom(e|ium)(?!\w)", r"Jobrowsa"),
     # post-replacement cleanup
-    (r'((?:Google )?Chrom(e|ium))_unreplace', r'\1'),
-    (r'_unreplace', r'')
+    (r"((?:Google )?Chrom(e|ium))_unreplace", r"\1"),
+    (r"_unreplace", r""),
 ]
 
-REPLACEMENT_REGEXES = list(map(lambda line: (re.compile(line[0]), line[1]),
-                               REPLACEMENT_REGEXES_STR))
+REPLACEMENT_REGEXES = list(
+    map(lambda line: (re.compile(line[0]), line[1]), REPLACEMENT_REGEXES_STR)
+)
 
 
 def add_grit_to_path(tree):
     """Inserts the grit/ folder into the module loading path."""
-    grit_path = tree / 'tools' / 'grit'
+    grit_path = tree / "tools" / "grit"
     if not grit_path.exists():
         raise FileNotFoundError(f"grit directory not found at {grit_path}")
     sys.path.insert(0, str(grit_path))
@@ -58,12 +57,12 @@ def compute_fp(message):
     # pylint: disable=import-outside-toplevel,import-error
     import grit.extern.tclib
 
-    text = message.text or ''
-    for elem in message.findall('ph'):
-        text = text + elem.get('name').upper() + (elem.tail or '')
+    text = message.text or ""
+    for elem in message.findall("ph"):
+        text = text + elem.get("name").upper() + (elem.tail or "")
     text = strip_message_text_for_fp(text)
 
-    meaning = message.get('meaning', '')
+    meaning = message.get("meaning", "")
     return grit.extern.tclib.GenerateMessageId(text, meaning)
 
 
@@ -83,8 +82,7 @@ def should_skip_tail(elem):
     Whether the `tail` text should be left as-is on
     a particular element.
     """
-    return elem.get('name') == 'BEGIN_LINK_CHROMIUM' \
-        and elem.tail == 'Chromium'
+    return elem.get("name") == "BEGIN_LINK_CHROMIUM" and elem.tail == "Chromium"
 
 
 def replace_grit_message(msg):
@@ -118,9 +116,9 @@ def replace_xtb_translation(msg, fp_map):
     if not replace_grit_message(msg):
         return False
 
-    msg_id = msg.get('id')
+    msg_id = msg.get("id")
     if msg_id in fp_map:
-        msg.set('id', fp_map[msg_id])
+        msg.set("id", fp_map[msg_id])
     return True
 
 
@@ -134,14 +132,14 @@ def replace_grit_tree(text):
     xml_tree = xml.fromstring(text, get_parser())
     fp_map = {}
 
-    for message in xml_tree.findall('.//message'):
+    for message in xml_tree.findall(".//message"):
         old_fp = compute_fp(message)
         if replace_grit_message(message):
             new_fp = compute_fp(message)
             if old_fp != new_fp:
                 fp_map[old_fp] = new_fp
 
-    return xml.tostring(xml_tree, encoding='unicode', xml_declaration=True), fp_map
+    return xml.tostring(xml_tree, encoding="unicode", xml_declaration=True), fp_map
 
 
 def dedup_translations_in_place(translation, seen):
@@ -155,10 +153,10 @@ def dedup_translations_in_place(translation, seen):
     # This usually applies to strings that have one "Chromium" and one
     # "Chrome" variant. Since we substituted both of those with Helium,
     # their fingerprints collide and crash the build.
-    translation_id = translation.get('id')
+    translation_id = translation.get("id")
     while translation_id in seen and translation_id.isdigit():
         translation_id = str(int(translation_id) + 1)
-    translation.set('id', translation_id)
+    translation.set("id", translation_id)
     seen.add(translation_id)
 
 
@@ -168,13 +166,13 @@ def replace_xtb_tree(text, fp_map):
     changed = False
     ids_seen = set()
 
-    for translation in xml_tree.findall('.//translation'):
-        assert translation.get('id')
+    for translation in xml_tree.findall(".//translation"):
+        assert translation.get("id")
         changed |= replace_xtb_translation(translation, fp_map)
         dedup_translations_in_place(translation, ids_seen)
 
     if changed:
-        return xml.tostring(xml_tree, encoding='unicode', xml_declaration=True)
+        return xml.tostring(xml_tree, encoding="unicode", xml_declaration=True)
 
     return None
 
