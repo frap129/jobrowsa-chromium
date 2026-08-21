@@ -13,8 +13,9 @@ REPLACEMENT_REGEXES_STR = [
     (r"(\w+) Web( S|s)tore", r"\1_unreplace Web Store"),
     (r"(\w+) Remote Desktop", r"\1_unreplace Remote Desktop"),
     # main replacement(s)
-    (r"(\b)chrome://", r"\1helium://"),
+    (r"(\b)chrome://", r"\1jobrowsa://"),
     (r"(?:Google )?Chrom(e|ium)(?!\w)", r"Jobrowsa"),
+    (r"Helium(?!\w)", r"Jobrowsa"),
     # post-replacement cleanup
     (r"((?:Google )?Chrom(e|ium))_unreplace", r"\1"),
     (r"_unreplace", r""),
@@ -67,7 +68,7 @@ def compute_fp(message):
 
 
 def replace_text(text):
-    """Replaces instances of Chrom(e | ium) with Helium in strings"""
+    """Replaces user-visible Chrome, Chromium, and Helium product names."""
     had_match = False
     for regex, replacement in REPLACEMENT_REGEXES:
         if regex.search(text):
@@ -87,7 +88,7 @@ def should_skip_tail(elem):
 
 def replace_grit_message(msg):
     """
-    Replaces instances of Chrom(e | ium) with Helium
+    Replaces user-visible Chrome, Chromium, and Helium product names
     in a <message> or <translation> element (and its children).
     """
     had_any_match = False
@@ -110,7 +111,7 @@ def replace_grit_message(msg):
 
 def replace_xtb_translation(msg, fp_map):
     """
-    Replaces instances of Chrom(e | ium) with Helium in a
+    Replaces user-visible Chrome, Chromium, and Helium product names in a
     .xtb <translation>.
     """
     if not replace_grit_message(msg):
@@ -128,7 +129,10 @@ def get_parser():
 
 
 def replace_grit_tree(text):
-    """Replaces instances of Chrom(e | ium) with Helium, where desired"""
+    """Replaces user-visible product names in GRIT message values"""
+    # Keep the input's XML prolog state: some GRDP consumers reject
+    # files that gain a declaration they did not ship with.
+    has_declaration = text.lstrip().startswith("<?xml")
     xml_tree = xml.fromstring(text, get_parser())
     fp_map = {}
 
@@ -139,7 +143,10 @@ def replace_grit_tree(text):
             if old_fp != new_fp:
                 fp_map[old_fp] = new_fp
 
-    return xml.tostring(xml_tree, encoding="unicode", xml_declaration=True), fp_map
+    return (
+        xml.tostring(xml_tree, encoding="unicode", xml_declaration=has_declaration),
+        fp_map,
+    )
 
 
 def dedup_translations_in_place(translation, seen):

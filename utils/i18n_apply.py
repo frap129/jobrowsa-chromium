@@ -71,7 +71,9 @@ def parse_xtb_paths(grd_path):
 
 
 def to_xtb_message(message):
-    """Convert a GRD-style message to XTB format."""
+    """Convert a branded GRD-style message to XTB format."""
+    message = message.replace('Helium', 'Jobrowsa')
+    message, _ = namesub.replace_text(message)
     return re.sub(
         r'<ph name="([^"]+)">.*?</ph>',
         r'<ph name="\1" />',
@@ -150,7 +152,11 @@ def merge_into_xtb(xtb_path, source_entries, trans_by_key):
         trans = trans_by_key.get(key)
         if not trans:
             continue
-        msg_id = get_id(src['name'], src['context'], src['message'], src.get('meaning'))
+        # translation ids must match the substituted GRD message
+        # fingerprints, otherwise GRIT silently drops the translations
+        branded_message, _ = namesub.replace_text(src['message'])
+        msg_id = get_id(src['name'], src['context'], branded_message,
+                        src.get('meaning'))
         if msg_id in seen_ids:
             continue
         seen_ids.add(msg_id)
