@@ -35,6 +35,7 @@ ungoogled-chromium/move-js-optimizer-unfamiliar-sites.patch
 ungoogled-chromium/build-with-wasm-rollup.patch
 ungoogled-chromium/remove-navigation-source-param.patch
 ungoogled-chromium/bundle-hyphenation-patterns.patch
+ungoogled-chromium/disable-tos-dialog.patch
 
 bromite/disable-fetching-field-trials.patch
 
@@ -127,7 +128,12 @@ helium/core/sync/datatype-policy.patch
 helium/core/sync/vault-format.patch
 helium/core/sync/vault-encryption.patch
 helium/core/sync/vault-transport.patch
-helium/core/sync/vault-store-read.patch
+helium/core/sync/vault-store.patch
+helium/core/sync/loopback-server-in-memory.patch
+helium/core/sync/history-expiration-threshold.patch
+helium/core/sync/vault-engine-backend.patch
+helium/core/sync/provider/api-contract.patch
+helium/core/sync/provider/profile-prefs.patch
 
 helium/settings/setup-behavior-settings-page.patch
 helium/core/keyboard-shortcuts.patch
@@ -343,3 +349,4 @@ helium/ui/native-frame-materials.patch
 helium/ui/page-zoom-indicator.patch
 helium/ui/add-more-zoom-presets.patch
 helium/ui/helium-noise-page-info.patch
+helium/ui/show-tabs-from-non-account-backends.patch
