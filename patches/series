@@ -184,6 +184,7 @@ helium/core/noise/canvas.patch
 helium/core/noise/audio.patch
 helium/core/noise/hardware-concurrency.patch
 helium/core/noise/high-entropy-profile.patch
+helium/core/noise/canvas-profile.patch
 
 helium/core/network/disable-ech-flag.patch
 helium/core/network/global-privacy-control-pref.patch
