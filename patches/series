@@ -188,6 +188,7 @@ helium/core/noise/canvas-profile.patch
 helium/core/noise/webgl-profile.patch
 helium/core/noise/text-profile.patch
 helium/core/noise/font-cohort.patch
+helium/core/noise/display-profile.patch
 
 helium/core/network/disable-ech-flag.patch
 helium/core/network/global-privacy-control-pref.patch
