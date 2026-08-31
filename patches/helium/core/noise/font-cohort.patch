@@ -535,35 +535,23 @@ Index: src/third_party/blink/renderer/core/css/font_face_set_test.cc
 +}  // namespace blink
 Index: src/third_party/blink/renderer/core/helium_noise/build.gni
 ===================================================================
---- /dev/null
+--- src.orig/third_party/blink/renderer/core/helium_noise/build.gni
 +++ src/third_party/blink/renderer/core/helium_noise/build.gni
-@@ -0,0 +1,26 @@
-+# Copyright 2026 The Helium Authors
-+# You can use, redistribute, and/or modify this source code under
-+# the terms of the GPL-3.0 license that can be found in the LICENSE file.
-+
-+blink_core_sources_helium_noise = [
-+  "helium_noise_hash.cc",
-+  "helium_noise_hash.h",
-+  "helium_noise_profile.cc",
-+  "helium_noise_profile.h",
-+  "canvas_noising_helper.cc",
-+  "canvas_noising_helper.h",
-+  "webgl_capability_policy.cc",
-+  "webgl_capability_policy.h",
-+  "text_policy.cc",
-+  "text_policy.h",
+@@ -13,6 +13,8 @@ blink_core_sources_helium_noise = [
+   "webgl_capability_policy.h",
+   "text_policy.cc",
+   "text_policy.h",
 +  "font_cohort.cc",
 +  "font_cohort.h",
-+]
-+
-+blink_core_tests_helium_noise = [
-+  "helium_noise_profile_test.cc",
-+  "canvas_noising_helper_test.cc",
-+  "webgl_capability_policy_test.cc",
-+  "text_policy_test.cc",
+ ]
+ 
+ blink_core_tests_helium_noise = [
+@@ -20,4 +22,5 @@ blink_core_tests_helium_noise = [
+   "canvas_noising_helper_test.cc",
+   "webgl_capability_policy_test.cc",
+   "text_policy_test.cc",
 +  "font_cohort_test.cc",
-+]
+ ]
 Index: src/third_party/blink/renderer/core/css/css_font_selector.cc
 ===================================================================
 --- /dev/null
