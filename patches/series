@@ -192,6 +192,7 @@ helium/core/noise/text-profile.patch
 helium/core/noise/font-cohort.patch
 helium/core/noise/display-profile.patch
 helium/core/noise/normalize-network-info.patch
+helium/core/noise/normalize-keyboard-layout.patch
 
 helium/core/network/disable-ech-flag.patch
 helium/core/network/global-privacy-control-pref.patch
