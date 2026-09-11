@@ -195,6 +195,7 @@ helium/core/noise/normalize-network-info.patch
 helium/core/noise/normalize-keyboard-layout.patch
 helium/core/noise/block-memory-side-surface.patch
 helium/core/noise/windows-identity-gate.patch
+helium/core/noise/windows-font-identity.patch
 
 helium/core/network/disable-ech-flag.patch
 helium/core/network/global-privacy-control-pref.patch
