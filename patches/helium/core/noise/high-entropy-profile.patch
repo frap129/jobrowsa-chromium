@@ -176,18 +176,18 @@ Index: src/third_party/blink/renderer/core/workers/dedicated_worker_test.cc
  #include "testing/gmock/include/gmock/gmock.h"
  #include "testing/gtest/include/gtest/gtest.h"
 +#include "third_party/blink/public/common/helium_noise/noise_token.h"
+ #include "third_party/blink/public/mojom/security_context/insecure_request_policy.mojom-blink.h"
  #include "third_party/blink/public/mojom/v8_cache_options.mojom-blink.h"
  #include "third_party/blink/public/mojom/worker/dedicated_worker_host.mojom-blink.h"
- #include "third_party/blink/public/platform/task_type.h"
-@@ -31,6 +32,7 @@
+@@ -32,6 +33,7 @@
  #include "third_party/blink/renderer/core/execution_context/execution_context.h"
  #include "third_party/blink/renderer/core/frame/local_dom_window.h"
  #include "third_party/blink/renderer/core/frame/local_frame.h"
 +#include "third_party/blink/renderer/core/helium_noise/helium_noise_profile.h"
  #include "third_party/blink/renderer/core/inspector/thread_debugger_common_impl.h"
- #include "third_party/blink/renderer/core/messaging/blink_transferable_message.h"
- #include "third_party/blink/renderer/core/messaging/message_channel.h"
-@@ -297,6 +299,7 @@ class DedicatedWorkerMessagingProxyForTe
+ #include "third_party/blink/renderer/core/loader/empty_clients.h"
+ #include "third_party/blink/renderer/core/loader/worker_fetch_context.h"
+@@ -305,6 +307,7 @@
                    ->GetFrame()
                    ->GetSettings()));
      }
@@ -195,7 +195,7 @@ Index: src/third_party/blink/renderer/core/workers/dedicated_worker_test.cc
      InitializeWorkerThread(
          std::move(params),
          WorkerBackingThreadStartupData(
-@@ -997,4 +1000,32 @@ TEST_P(DedicatedWorkerDocumentPolicyTest
+@@ -1129,4 +1132,32 @@
    EXPECT_EQ(has_document_policy, IsFeatureEnabled());
  }
  
@@ -845,8 +845,8 @@ Index: src/content/test/test_page_broadcast.h
 ===================================================================
 --- src.orig/content/test/test_page_broadcast.h
 +++ src/content/test/test_page_broadcast.h
-@@ -52,6 +52,9 @@ class TestPageBroadcast : public blink::
-       network::mojom::AttributionSupport support) override;
+@@ -50,6 +50,9 @@
+       const base::UnguessableToken& browsing_context_group_token) override;
    void UpdateColorProviders(
        const blink::ColorProviderColorMaps& color_provider_colors) override;
 +  void UpdateHeliumNoiseTokens(
