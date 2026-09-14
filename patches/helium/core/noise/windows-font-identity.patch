@@ -223,7 +223,7 @@
  ]
 --- a/third_party/blink/renderer/core/helium_noise/font_cohort.cc
 +++ b/third_party/blink/renderer/core/helium_noise/font_cohort.cc
-@@ -8,251 +8,174 @@
+@@ -8,251 +8,176 @@
  
  #include "third_party/blink/renderer/core/helium_noise/font_cohort.h"
  
@@ -289,6 +289,8 @@
 +    {"Segoe Print", {"", ""}, FontGenericClass::kDisplay},
 +    {"Segoe Script", {"", ""}, FontGenericClass::kDisplay},
 +    {"Segoe UI", {"", ""}, FontGenericClass::kSans},
++    {"Segoe UI Light", {"", ""}, FontGenericClass::kSans},
++    {"Segoe UI Semibold", {"", ""}, FontGenericClass::kSans},
 +    {"Segoe UI Emoji", {"", ""}, FontGenericClass::kSymbol},
 +    {"Segoe UI Symbol", {"", ""}, FontGenericClass::kSymbol},
 +    {"Segoe UI Variable", {"", ""}, FontGenericClass::kSans},
