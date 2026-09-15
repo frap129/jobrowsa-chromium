@@ -223,7 +223,7 @@
  ]
 --- a/third_party/blink/renderer/core/helium_noise/font_cohort.cc
 +++ b/third_party/blink/renderer/core/helium_noise/font_cohort.cc
-@@ -8,251 +8,176 @@
+@@ -8,251 +8,183 @@
  
  #include "third_party/blink/renderer/core/helium_noise/font_cohort.h"
  
@@ -255,12 +255,16 @@
 -    {"Noto Serif", {"", ""}, FontGenericClass::kSerif},
 -    {"Noto Sans Mono", {"Noto Mono", ""}, FontGenericClass::kMonospace},
 +// Windows 11 default font set at the family granularity the platform exposes.
-+// Locale-specific families (Arabic, Indic, CJK, Thai, Hebrew, Korean, and
-+// other script-specific faces) are deliberately out of scope for this cut.
-+// The aliases cover the legacy names Windows substitutes for these families.
++// Locale-specific supplemental families (Arabic, Indic, Thai, Hebrew, Korean,
++// and other script-specific faces) are deliberately out of scope, except the
++// base-installed Japanese MS Gothic faces which every Windows 11 has. The
++// aliases cover the legacy names Windows substitutes for these families, and
++// Arial Narrow is a stretch-suffix alias the Windows font matcher resolves
++// even when the Office font is absent.
 +constexpr FontIdentity kWindowsFontIdentities[] = {
 +    {"Arial", {"Helvetica", ""}, FontGenericClass::kSans},
 +    {"Arial Black", {"", ""}, FontGenericClass::kDisplay},
++    {"Arial Narrow", {"", ""}, FontGenericClass::kSans},
 +    {"Bahnschrift", {"", ""}, FontGenericClass::kSans},
 +    {"Calibri", {"", ""}, FontGenericClass::kSans},
 +    {"Cambria", {"", ""}, FontGenericClass::kSerif},
@@ -283,6 +287,9 @@
 +    {"Lucida Sans Unicode", {"", ""}, FontGenericClass::kSans},
 +    {"Marlett", {"", ""}, FontGenericClass::kSymbol},
 +    {"Microsoft Sans Serif", {"MS Sans Serif", ""}, FontGenericClass::kSans},
++    {"MS Gothic", {"", ""}, FontGenericClass::kMonospace},
++    {"MS PGothic", {"", ""}, FontGenericClass::kSans},
++    {"MS UI Gothic", {"", ""}, FontGenericClass::kSans},
 +    {"Palatino Linotype", {"", ""}, FontGenericClass::kSerif},
 +    {"Segoe Fluent Icons", {"", ""}, FontGenericClass::kSymbol},
 +    {"Segoe MDL2 Assets", {"", ""}, FontGenericClass::kSymbol},
@@ -644,9 +651,9 @@
  
 -// The fixed approved table: 9 identities covering 15 names total.
 +// The Windows 11 default font set at the family granularity the platform
-+// exposes, with locale-specific families excluded. The identity reports the
-+// whole set as installed to every origin and worker; there is no per-origin
-+// selection.
++// exposes, including the base-installed Japanese MS Gothic faces but no
++// supplemental locale-specific families. The identity reports the whole set
++// as installed to every origin and worker; there is no per-origin selection.
  CORE_EXPORT base::span<const FontIdentity> ApprovedFontIdentities();
  
 -// Selects the cohort of installed font identities visible for this profile.
