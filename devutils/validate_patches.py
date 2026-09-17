@@ -60,6 +60,9 @@ try:
             get_logger().info('Running HTTP request sleep backoff')
             super()._sleep_backoff()
 
+    # googlesource.com returns 502 transiently; urllib3's default retry set omits it
+    _RETRY_STATUS_CODES = urllib3.util.Retry.RETRY_AFTER_STATUS_CODES | {502}
+
     def _get_requests_session():
         session = requests.Session()
         http_adapter = requests.adapters.HTTPAdapter(
@@ -67,7 +70,7 @@ try:
                                       read=10,
                                       connect=10,
                                       backoff_factor=8,
-                                      status_forcelist=urllib3.Retry.RETRY_AFTER_STATUS_CODES,
+                                      status_forcelist=_RETRY_STATUS_CODES,
                                       raise_on_status=False))
         session.mount('http://', http_adapter)
         session.mount('https://', http_adapter)
@@ -98,7 +101,7 @@ class _NotInRepoError(RuntimeError):
 class _DepsNodeVisitor(ast.NodeVisitor):
     _valid_syntax_types = (ast.mod, ast.expr_context, ast.boolop, ast.Assign, ast.Add, ast.Name,
                            ast.Dict, ast.Constant, ast.List, ast.BinOp)
-    _allowed_callables = ('Var', )
+    _allowed_callables = ('Str', 'Var')
 
     def visit_Call(self, node): #pylint: disable=invalid-name
         """Override Call syntax handling"""
@@ -135,10 +138,23 @@ def _deps_var(deps_globals):
     return _var_impl
 
 
+def _deps_str():
+    """Return a function that implements DEPS's Str() function"""
+
+    def _str_impl(value):
+        """Implementation of Str() in DEPS"""
+        if not isinstance(value, str):
+            raise TypeError(f'Str() argument is not a string: {type(value).__name__}')
+        return value
+
+    return _str_impl
+
+
 def _parse_deps(deps_text):
     """Returns a dict of parsed DEPS data"""
     deps_globals = {'__builtins__': None}
     deps_globals['Var'] = _deps_var(deps_globals)
+    deps_globals['Str'] = _deps_str()
     exec(deps_text, deps_globals) #pylint: disable=exec-used
     return deps_globals
 
@@ -515,9 +531,26 @@ def _modify_file_lines(patched_file, file_lines):
                 assert line.line_type in (LINE_TYPE_EMPTY, LINE_TYPE_NO_NEWLINE)
 
 
+def _patched_file_path(patched_file):
+    """
+    Returns the path to the patched file in the source tree once the -p1 strip is applied
+
+    Patch headers come from different generators, so they may carry "a/", "b/", "src/", or
+    "src.orig/" prefixes that have to be stripped before looking the file up in the tree.
+    """
+    if patched_file.is_added_file:
+        file_name = patched_file.target_file
+    else:
+        file_name = patched_file.source_file
+    stripped_name = file_name.split('/', 1)
+    if len(stripped_name) > 1:
+        return stripped_name[1]
+    return file_name
+
+
 def _apply_file_unidiff(patched_file, files_under_test):
     """Applies the unidiff.PatchedFile to the source files under testing"""
-    patched_file_path = Path(patched_file.path)
+    patched_file_path = Path(_patched_file_path(patched_file))
     if patched_file.is_added_file:
         if patched_file_path in files_under_test:
             assert files_under_test[patched_file_path] is None
@@ -539,7 +572,7 @@ def _dry_check_patched_file(patched_file, orig_file_content):
     with tempfile.TemporaryDirectory() as tmpdirname:
         tmp_dir = Path(tmpdirname)
         # Write file to patch
-        patched_file_path = tmp_dir / patched_file.path
+        patched_file_path = tmp_dir / _patched_file_path(patched_file)
         patched_file_path.parent.mkdir(parents=True, exist_ok=True)
         patched_file_path.write_text(orig_file_content)
         # Write patch
@@ -558,9 +591,17 @@ def _test_patches(series_iter, patch_cache, files_under_test):
     """
     for patch_path_str in series_iter:
         for patched_file in patch_cache[patch_path_str]:
+            if not patched_file.is_added_file:
+                file_path = Path(_patched_file_path(patched_file))
+                if file_path not in files_under_test:
+                    # Files created outside the source tree (e.g. unpacked dependencies) cannot
+                    # be retrieved remotely, so skip them without failing the validation
+                    get_logger().warning('Skipping unavailable file for validation: %s (patch %s)',
+                                         file_path, patch_path_str)
+                    continue
             orig_file_content = None
             if get_logger().isEnabledFor(logging.DEBUG):
-                orig_file_content = files_under_test.get(Path(patched_file.path))
+                orig_file_content = files_under_test.get(Path(_patched_file_path(patched_file)))
                 if orig_file_content:
                     orig_file_content = ' '.join(orig_file_content)
             try:
@@ -613,10 +654,11 @@ def _get_required_files(patch_cache):
     file_set = set()
     for patch_set in patch_cache.values():
         for patched_file in patch_set:
+            patched_file_path = _patched_file_path(patched_file)
             if patched_file.is_added_file:
-                new_files.add(patched_file.path)
-            elif patched_file.path not in new_files:
-                file_set.add(Path(patched_file.path))
+                new_files.add(patched_file_path)
+            elif patched_file_path not in new_files:
+                file_set.add(Path(patched_file_path))
     return file_set
 
 
