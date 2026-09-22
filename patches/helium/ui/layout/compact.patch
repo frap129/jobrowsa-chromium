@@ -89,7 +89,7 @@
    std::unique_ptr<tabs::VerticalTabStripStateController::ScopedEnableStateLock>
 --- a/chrome/browser/ui/views/frame/browser_view.cc
 +++ b/chrome/browser/ui/views/frame/browser_view.cc
-@@ -1515,7 +1515,8 @@ bool BrowserView::ShouldDrawTabStrip() c
+@@ -1519,7 +1519,8 @@ bool BrowserView::ShouldDrawTabStrip() c
             horizontal_tab_strip_region_view_->GetTabStripView() != nullptr;
    }
  
@@ -99,7 +99,7 @@
  }
  
  bool BrowserView::ShouldDrawVerticalTabStrip() const {
-@@ -1530,6 +1531,11 @@ bool BrowserView::ShouldDrawWebAppFrameT
+@@ -1534,6 +1535,11 @@ bool BrowserView::ShouldDrawWebAppFrameT
           GetFrameView()->ShouldShowWebAppFrameToolbar();
  }
  
@@ -111,7 +111,7 @@
  bool BrowserView::IsVerticalTabStripCollapsed() const {
    if (auto* const controller =
            tabs::VerticalTabStripStateController::From(browser_)) {
-@@ -1676,6 +1682,31 @@ void BrowserView::OnVerticalTabStripMode
+@@ -1680,6 +1686,31 @@ void BrowserView::OnVerticalTabStripMode
    InvalidateLayout();
  }
  
@@ -192,7 +192,7 @@
  constexpr int kToolbarFlexOrderOffset = 1000;
  constexpr int kLocationBarFlexOrder = kToolbarFlexOrderOffset + 1;
  constexpr int kToolbarActionsFlexOrder = kToolbarFlexOrderOffset + 2;
-@@ -1347,6 +1349,22 @@ bool ToolbarView::IsRectInWindowCaption(
+@@ -1346,6 +1348,22 @@ bool ToolbarView::IsRectInWindowCaption(
      return gfx::ToEnclosingRect(rect_in_target_coords_f);
    };
  
@@ -215,7 +215,7 @@
    // Check each child view to see if the rect intersects with
    // any clickable elements. If it does, check if the click is actually on that
    // element. False if on a clickable element, true if not on a clickable element.
-@@ -1840,6 +1858,30 @@ void ToolbarView::LayoutCommon() {
+@@ -1839,6 +1857,30 @@ void ToolbarView::LayoutCommon() {
    // Cast button visibility is controlled externally.
  }
  
@@ -246,7 +246,7 @@
  void ToolbarView::UpdateToolbarLayout() {
    if (!location_bar_) {
      return;
-@@ -1850,7 +1892,10 @@ void ToolbarView::UpdateToolbarLayout()
+@@ -1849,7 +1891,10 @@ void ToolbarView::UpdateToolbarLayout()
                                 views::MaximumFlexSizeRule::kPreferred);
    const int location_bar_margin =
        GetLayoutConstant(LayoutConstant::kLocationBarMargin);
@@ -258,7 +258,7 @@
    const views::FlexSpecification location_bar_flex_rule =
        views::FlexSpecification(min_location_bar_flex,
                                 views::MaximumFlexSizeRule::kUnbounded)
-@@ -2165,7 +2210,7 @@ void ToolbarView::OnLocationBarCenteredC
+@@ -2180,7 +2225,7 @@ void ToolbarView::UpdateLocationBarCente
  
  gfx::Rect ToolbarView::GetCenteredLocationBarBounds(gfx::Rect bounds,
                                                      int toolbar_width) const {
@@ -287,7 +287,7 @@
    // Accessors.
    Browser* browser() const { return browser_; }
    views::Button* GetChromeLabsButton() const;
-@@ -426,6 +430,7 @@ class ToolbarView : public views::Access
+@@ -429,6 +433,7 @@ class ToolbarView : public views::Access
    raw_ptr<AvatarToolbarButton> avatar_ = nullptr;
    raw_ptr<MediaToolbarButton> media_button_ = nullptr;
    raw_ptr<BrowserAppMenuButton> app_menu_button_ = nullptr;
@@ -344,7 +344,7 @@
      elements.emplace_back(
 --- a/chrome/browser/ui/views/frame/layout/browser_view_tabbed_layout_impl.cc
 +++ b/chrome/browser/ui/views/frame/layout/browser_view_tabbed_layout_impl.cc
-@@ -307,6 +307,9 @@ BrowserViewTabbedLayoutImpl::GetMinimumT
+@@ -301,6 +301,9 @@ BrowserViewTabbedLayoutImpl::GetMinimumT
        }
        return std::make_pair(result, gfx::Size());
      }
@@ -354,7 +354,7 @@
      case TabStripType::kNone:
        return std::make_pair(gfx::Size(), gfx::Size());
    }
-@@ -582,6 +585,9 @@ BrowserViewTabbedLayoutImpl::GetTabStrip
+@@ -577,6 +580,9 @@ BrowserViewTabbedLayoutImpl::GetTabStrip
    if (delegate().ShouldDrawVerticalTabStrip()) {
      return TabStripType::kVertical;
    }
