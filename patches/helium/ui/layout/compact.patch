@@ -1,7 +1,9 @@
 --- a/chrome/browser/helium_flag_choices.h
 +++ b/chrome/browser/helium_flag_choices.h
-@@ -50,2 +50,5 @@
+@@ -42,6 +42,9 @@ constexpr const char kDisableEchCommandL
+ constexpr const char kHeliumSplitClientHelloCommandLine[] =
      "helium-split-clienthello";
+ 
 +constexpr const char kHeliumCompactLocationWidthCommandLine[] =
 +    "helium-compact-location-width";
 +
