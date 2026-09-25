@@ -186,17 +186,6 @@ helium/core/noise/core.patch
 helium/core/noise/canvas.patch
 helium/core/noise/audio.patch
 helium/core/noise/hardware-concurrency.patch
-helium/core/noise/high-entropy-profile.patch
-helium/core/noise/canvas-profile.patch
-helium/core/noise/webgl-profile.patch
-helium/core/noise/text-profile.patch
-helium/core/noise/font-cohort.patch
-helium/core/noise/display-profile.patch
-helium/core/noise/normalize-network-info.patch
-helium/core/noise/normalize-keyboard-layout.patch
-helium/core/noise/block-memory-side-surface.patch
-helium/core/noise/windows-identity-gate.patch
-helium/core/noise/windows-font-identity.patch
 
 helium/core/network/disable-ech-flag.patch
 helium/core/network/global-privacy-control-pref.patch
@@ -358,7 +347,6 @@ helium/ui/layout/toolbar-actions.patch
 helium/ui/layout/zen-mode-wiring.patch
 helium/ui/layout/zen-caption-buttons.patch
 helium/ui/layout/zen-mode.patch
-helium/ui/layout/address-bar-in-sidebar.patch
 
 helium/ui/generate-standard-qr-codes.patch
 helium/ui/pdf-viewer.patch
