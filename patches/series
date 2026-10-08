@@ -1,4 +1,5 @@
 upstream-fixes/missing-dependencies.patch
+upstream-fixes/tab-restore-live-tabs.patch
 
 inox-patchset/fix-building-without-safebrowsing.patch
 inox-patchset/disable-autofill-download-manager.patch
@@ -30,7 +31,6 @@ ungoogled-chromium/disable-privacy-sandbox.patch
 ungoogled-chromium/extensions-manifestv2.patch
 ungoogled-chromium/remove-f1-shortcut.patch
 ungoogled-chromium/move-js-optimizer-unfamiliar-sites.patch
-ungoogled-chromium/build-with-wasm-rollup.patch
 ungoogled-chromium/remove-navigation-source-param.patch
 ungoogled-chromium/bundle-hyphenation-patterns.patch
 ungoogled-chromium/disable-tos-dialog.patch
@@ -134,6 +134,7 @@ helium/core/sync/provider/api.patch
 helium/core/sync/provider/manifest-handler.patch
 helium/core/sync/provider/service.patch
 helium/core/sync/provider/profile-prefs.patch
+helium/core/sync/provider/repository.patch
 helium/core/sync/provider/exclude-from-vault.patch
 helium/core/sync/disable-google-backed-sync-integrations.patch
 
@@ -215,8 +216,9 @@ helium/core/custom-profile-avatar.patch
 helium/core/close-tabs-to-left.patch
 helium/core/custom-keyboard-shortcuts.patch
 helium/core/copy-url-tab-context-menu.patch
+helium/core/mute-tab-context-menu.patch
 helium/core/simplify-context-menu.patch
-helium/core/disable-pdf-infobar.patch
+helium/core/disable-annoying-infobars.patch
 helium/core/enable-screenshots.patch
 helium/core/enable-glow-up-features.patch
 helium/core/enable-bookmark-bar-settings.patch
@@ -230,6 +232,7 @@ helium/core/disable-non-standard-auth-features.patch
 helium/core/use-system-python3.patch
 helium/core/lazy-session-restore.patch
 helium/core/enable-back-to-opener.patch
+helium/core/ridiculous-google-compat-exceptions.patch
 
 helium/settings/settings-page-icons.patch
 helium/settings/move-search-suggest.patch
